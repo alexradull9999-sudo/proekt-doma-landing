@@ -169,10 +169,9 @@
 <button class="close" type="button" data-close aria-label="Закрыть форму">×</button>
 <span class="label">Начнём с вашей задачи</span><h2 id="contact-title" tabindex="-1">Обсудим ваш будущий дом</h2>
 <p class="small" id="contact-context">Оставьте телефон и выберите удобный способ связи.</p>
-<form id="contact-form" action="https://formsubmit.co/offer@a-s-buro.com" method="POST" accept-charset="UTF-8">
-<input type="hidden" name="_subject" value="Проект дома — заявка с лендинга">
-<input type="hidden" name="_template" value="table"><input type="hidden" name="_url" value="https://xn--80ahculiddjx.com/">
-<input type="hidden" name="_next" value="https://xn--80ahculiddjx.com/thanks.html">
+<form id="contact-form" action="https://api.web3forms.com/submit" method="POST" accept-charset="UTF-8">
+<input type="hidden" name="access_key" value="574deee2-323a-4dd2-880e-f22438eec98c">
+<input type="checkbox" class="honeypot" name="botcheck" tabindex="-1" autocomplete="off" aria-hidden="true">
 <input type="hidden" name="Источник" value="Проект дома · архитектурный лендинг">
 <input type="hidden" name="Обращение" value=""><input type="hidden" name="Площадь дома" value="">
 <input type="hidden" name="Состав проекта" value=""><input type="hidden" name="Этап" value="">
@@ -183,6 +182,7 @@
 <label><input type="radio" name="Способ связи" value="Telegram" required><span>Telegram</span></label><label><input type="radio" name="Способ связи" value="WhatsApp" required><span>WhatsApp</span></label><label><input type="radio" name="Способ связи" value="MAX" required><span>MAX</span></label>
 </div></fieldset><p class="small" id="phone-hint">Укажите номер, к которому привязан выбранный мессенджер.</p>
 <label class="consent"><input type="checkbox" name="Согласие на обработку данных" value="Дано пользователем" required><span>Я согласен на обработку персональных данных в соответствии с <a href="politika-konfidencialnosti/" target="_blank" rel="noopener noreferrer">политикой конфиденциальности</a> для связи по моему обращению.</span></label>
+<div data-delivery-captcha></div>
 <button type="submit" class="btn">Отправить заявку <span class="arrow" aria-hidden="true">↗</span></button>
 <p class="small" id="form-status" role="status" aria-live="polite"></p>
 </form></dialog>
@@ -194,4 +194,4 @@
   <img alt="">
 </dialog>
 <dialog id="menu" class="mobile-drawer" aria-labelledby="menu-title"><button type="button" class="close" data-close aria-label="Закрыть меню">×</button><span class="label" id="menu-title">Проект дома</span><nav class="menu-links" aria-label="Мобильная навигация"><a href="#portfolio" data-menu-close>Проекты домов</a><a href="#services" data-menu-close>Проектирование</a><a href="#estimate" data-menu-close>Получить расчёт</a><a href="#about" data-menu-close>О бюро</a><a href="#start-checklist" data-menu-close>Чек-лист для старта</a><a href="#contacts" data-menu-close>Контакты</a></nav></dialog>
-<script src="projects.js?v=20261111-portfolio" defer></script><script src="landing.js?v=20261111-portfolio" defer></script></body></html>
+<script src="projects.js?v=20261111-portfolio" defer></script><script src="landing.js?v=20261111-web3forms" type="module"></script></body></html>

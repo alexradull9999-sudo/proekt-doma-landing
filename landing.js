@@ -1,3 +1,5 @@
+import {prepareCaptcha, sendHosted} from './hosted-delivery.mjs';
+
 const $ = selector => document.querySelector(selector);
 const form = $('#contact-form');
 const phone = form.elements['Телефон'];
@@ -35,6 +37,7 @@ function openContact(title, context = '', parameters = {}) {
   if ($('#gallery').open) closeDialog($('#gallery'));
   openDialog('contact', '#contact-title');
   if (galleryOrigin) focusOrigins.set($('#contact'), galleryOrigin);
+  prepareCaptcha(form, status);
 }
 function renderImage() {
   $('#gallery-image').src = currentProject.images[imageIndex];
@@ -98,11 +101,13 @@ const validPhone = value => {
 };
 phone.addEventListener('input', () => phone.setCustomValidity(''));
 form.addEventListener('submit', event => {
-  if (submitting || form.elements._honey.value) {event.preventDefault(); return;}
+  event.preventDefault();
+  if (submitting || form.elements._honey.value) return;
   phone.setCustomValidity(validPhone(phone.value) ? '' : 'Укажите телефон полностью: от 10 до 15 цифр.');
-  if (!form.reportValidity()) {event.preventDefault(); return;}
-  submitting = true; form.setAttribute('aria-busy', 'true'); status.textContent = 'Переходим к проверке от спама для отправки заявки.';
-  // Native POST preserves FormSubmit's CAPTCHA and actual delivery response.
+  if (!form.reportValidity()) return;
+  submitting = true;
+  form.setAttribute('aria-busy', 'true');
+  void sendHosted(form, status).finally(() => {submitting = false;});
 });
 window.addEventListener('pageshow', () => {submitting = false; form.removeAttribute('aria-busy'); status.textContent = '';});
 const params = new URLSearchParams(location.search);
