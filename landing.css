@@ -11,6 +11,20 @@ dialog{border:1px solid var(--line);background:var(--bg);color:var(--text);max-h
 .thanks-header{flex-wrap:wrap}.thanks-header>a[href^="tel:"],.thanks-page a[href^="tel:"]{white-space:nowrap}.thanks-header>a[href^="tel:"]{font-size:14px}
 @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}*,*::before,*::after{transition:none!important;animation:none!important}}
 
+#contact-backdrop:not([hidden]) {
+  position: fixed;
+  inset: 0;
+  z-index: 40;
+  background: rgb(0 0 0 / .78);
+  backdrop-filter: blur(4px);
+}
+#contact[open] {
+  position: fixed;
+  inset: 0;
+  z-index: 41;
+  margin: auto;
+}
+
 #hero .hero-photo img { object-position: 54% 55%; }
 .project-card[hidden], .portfolio-filters[hidden], .portfolio-more[hidden], .portfolio-more button[hidden] { display: none; }
 .portfolio-filters { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 28px; }

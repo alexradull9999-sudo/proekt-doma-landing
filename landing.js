@@ -1,6 +1,9 @@
 import {prepareCaptcha, sendHosted} from './hosted-delivery.mjs';
 
 const $ = selector => document.querySelector(selector);
+const contactDialog = $('#contact');
+const contactBackdrop = $('#contact-backdrop');
+const pageContent = $('#page-content');
 const form = $('#contact-form');
 const phone = form.elements['Телефон'];
 const status = $('#form-status');
@@ -11,12 +14,30 @@ const focusOrigins = new WeakMap();
 function openDialog(id, focusSelector) {
   const dialog = $('#' + id);
   focusOrigins.set(dialog, document.activeElement);
-  dialog.showModal(); document.body.style.overflow = 'hidden';
+  if (dialog === contactDialog) {
+    // hCaptcha displays its challenge beside the dialog in the document body.
+    dialog.show();
+    pageContent.inert = true;
+    contactBackdrop.hidden = false;
+  } else {
+    dialog.showModal();
+  }
+  document.body.style.overflow = 'hidden';
   dialog.querySelector(focusSelector || 'button, input, a')?.focus({preventScroll: true});
 }
 function closeDialog(dialog) { dialog.close(); }
+contactBackdrop.addEventListener('click', () => closeDialog(contactDialog));
+document.addEventListener('keydown', event => {
+  if (!contactDialog.open || event.key !== 'Escape' || event.defaultPrevented) return;
+  event.preventDefault();
+  closeDialog(contactDialog);
+});
 for (const dialog of document.querySelectorAll('dialog')) {
   dialog.addEventListener('close', () => {
+    if (dialog === contactDialog && !dialog.open) {
+      pageContent.inert = false;
+      contactBackdrop.hidden = true;
+    }
     if (!document.querySelector('dialog[open]')) document.body.style.overflow = '';
     const origin = focusOrigins.get(dialog);
     if (!document.querySelector('dialog[open]') && origin?.isConnected && !origin.closest('dialog:not([open])')) origin.focus({preventScroll: true});
