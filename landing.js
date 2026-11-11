@@ -66,10 +66,15 @@ document.addEventListener('click', event => {
   if (action?.dataset.action === 'form') {
     event.preventDefault(); openContact(action.textContent.trim().replace(/↗︎?$/, '').trim(), action.dataset.context);
   } else if (action?.dataset.action === 'menu') openDialog('menu');
-  const drawing = event.target.closest('[data-gallery]');
-  if (drawing) {
-    $('#lightbox img').src = `assets/${drawing.dataset.gallery}.webp`;
-    $('#lightbox img').alt = drawing.getAttribute('aria-label') || 'Пример листа проекта'; openDialog('lightbox');
+  const drawing = event.target.closest('a[data-gallery]');
+  if (drawing && !event.ctrlKey && !event.metaKey && !event.shiftKey && !event.altKey) {
+    event.preventDefault();
+    const title = drawing.getAttribute('aria-label');
+    $('#lightbox-title').textContent = title;
+    $('#lightbox img').src = drawing.href;
+    $('#lightbox img').alt = title;
+    $('#lightbox-original').href = drawing.href;
+    openDialog('lightbox', '#lightbox-title');
   }
 });
 for (const [id, direction] of [['gallery-prev', -1], ['gallery-next', 1]]) $('#' + id).addEventListener('click', () => {
@@ -102,3 +107,49 @@ form.addEventListener('submit', event => {
 window.addEventListener('pageshow', () => {submitting = false; form.removeAttribute('aria-busy'); status.textContent = '';});
 const params = new URLSearchParams(location.search);
 for (const key of ['utm_source', 'utm_medium', 'utm_campaign']) form.elements[key].value = (params.get(key) || '').slice(0, 150);
+
+const filters = $('.portfolio-filters');
+const filterButtons = [...filters.querySelectorAll('[data-project-filter]')];
+const projectCards = [...document.querySelectorAll('#architecture-projects [data-style]')];
+const portfolioMore = $('.portfolio-more');
+const moreButton = portfolioMore.querySelector('button');
+const featuredCount = 6;
+let activeStyle = 'all';
+let showAllProjects = false;
+
+function renderPortfolio() {
+  const matches = projectCards.filter(card => activeStyle === 'all' || card.dataset.style === activeStyle);
+  const visible = activeStyle === 'all' && !showAllProjects ? matches.slice(0, featuredCount) : matches;
+  for (const card of projectCards) card.hidden = !visible.includes(card);
+  for (const button of filterButtons) button.setAttribute('aria-pressed', String(button.dataset.projectFilter === activeStyle));
+  moreButton.hidden = activeStyle !== 'all' || projectCards.length <= featuredCount;
+  moreButton.setAttribute('aria-expanded', String(showAllProjects));
+  moreButton.textContent = showAllProjects ? 'Свернуть портфолио' : 'Показать все проекты';
+  $('#portfolio-count').textContent = `Показано ${visible.length} из ${projectCards.length}`;
+}
+
+for (const button of filterButtons) {
+  button.addEventListener('click', () => {
+    activeStyle = button.dataset.projectFilter;
+    showAllProjects = false;
+    renderPortfolio();
+  });
+}
+moreButton.addEventListener('click', () => {
+  showAllProjects = !showAllProjects;
+  renderPortfolio();
+});
+renderPortfolio();
+filters.hidden = false;
+portfolioMore.hidden = false;
+
+const marquee = $('[data-client-marquee]');
+const marqueeToggle = $('[data-client-marquee-toggle]');
+marquee.dataset.animated = 'true';
+marqueeToggle.hidden = false;
+marqueeToggle.addEventListener('click', () => {
+  const paused = marquee.dataset.paused !== 'true';
+  marquee.dataset.paused = String(paused);
+  marqueeToggle.textContent = paused ? 'Продолжить' : 'Пауза';
+  marqueeToggle.setAttribute('aria-label', paused ? 'Продолжить прокрутку брендов' : 'Приостановить прокрутку брендов');
+});
